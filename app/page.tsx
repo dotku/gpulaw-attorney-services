@@ -12,7 +12,7 @@ export default function Home() {
   const [activeTool, setActiveTool] = useState<ActiveTool>(null);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-50">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-50 flex flex-col">
       {/* Header */}
       <header className="bg-gradient-to-r from-blue-900 to-blue-700 text-white shadow-lg">
         <div className="container mx-auto px-4 py-6">
@@ -21,7 +21,7 @@ export default function Home() {
         </div>
       </header>
 
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-8 flex-1">
         {!activeTool && (
           <>
             {/* Hero Section */}
@@ -33,6 +33,77 @@ export default function Home() {
                 Advanced AI-powered tools designed specifically for attorneys to analyze documents,
                 conduct research, draft legal documents, and review work with unprecedented precision.
               </p>
+            </div>
+
+            {/* Specialized Use Cases Section */}
+            <div className="mb-12 max-w-5xl mx-auto">
+              <h3 className="text-2xl font-bold text-gray-900 mb-6 text-center">
+                Specialized Use Cases
+              </h3>
+              <a
+                href="https://crypto.gpulaw.com/en"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-gradient-to-br from-blue-950 via-blue-900 to-slate-900 rounded-xl shadow-2xl p-8 cursor-pointer hover:shadow-3xl transition-all hover:-translate-y-1 border-2 border-blue-400/50 hover:border-blue-400 block"
+              >
+                <div className="flex items-start space-x-6">
+                  <div className="bg-gradient-to-br from-blue-400 via-cyan-500 to-blue-500 p-4 rounded-xl shadow-lg">
+                    <svg className="w-12 h-12 text-blue-950" fill="currentColor" viewBox="0 0 24 24">
+                      <path fillRule="evenodd" d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd"/>
+                    </svg>
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1">
+                        <h3 className="text-3xl font-bold text-white mb-3 flex items-center gap-3">
+                          Crypto Compliance Legal Assistant
+                          <span className="px-3 py-1 bg-gradient-to-r from-blue-400 to-cyan-400 text-blue-950 text-sm font-semibold rounded-full">
+                            Featured
+                          </span>
+                        </h3>
+                        <p className="text-lg text-blue-100 mb-4">
+                          Comprehensive AI legal assistant specialized in cryptocurrency compliance, exchange regulations,
+                          ICO legal opinions, token classification, and AML/KYC requirements. Access dedicated tools
+                          for crypto-specific legal documentation and regulatory guidance.
+                        </p>
+                        <div className="flex flex-wrap gap-2 mb-4">
+                          <span className="px-4 py-2 bg-blue-900/50 text-blue-300 font-medium text-sm rounded-lg border-2 border-blue-400/50 hover:border-blue-400 transition-colors">
+                            Exchange Compliance
+                          </span>
+                          <span className="px-4 py-2 bg-blue-900/50 text-blue-300 font-medium text-sm rounded-lg border-2 border-blue-400/50 hover:border-blue-400 transition-colors">
+                            ICO Legal Opinions
+                          </span>
+                          <span className="px-4 py-2 bg-blue-900/50 text-blue-300 font-medium text-sm rounded-lg border-2 border-blue-400/50 hover:border-blue-400 transition-colors">
+                            AML/KYC Requirements
+                          </span>
+                          <span className="px-4 py-2 bg-blue-900/50 text-blue-300 font-medium text-sm rounded-lg border-2 border-blue-400/50 hover:border-blue-400 transition-colors">
+                            Token Classification
+                          </span>
+                          <span className="px-4 py-2 bg-blue-900/50 text-blue-300 font-medium text-sm rounded-lg border-2 border-blue-400/50 hover:border-blue-400 transition-colors">
+                            Licensing & Regulations
+                          </span>
+                        </div>
+                      </div>
+                      <svg className="w-8 h-8 text-blue-400 flex-shrink-0 ml-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                      </svg>
+                    </div>
+                    <div className="flex items-center gap-2 text-blue-300 font-semibold">
+                      <span>Launch Crypto Compliance Assistant</span>
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+              </a>
+            </div>
+
+            {/* Core Tools Section */}
+            <div className="mb-8 max-w-5xl mx-auto">
+              <h3 className="text-2xl font-bold text-gray-900 mb-6 text-center">
+                Core Legal Tools
+              </h3>
             </div>
 
             {/* Tools Grid */}
@@ -229,7 +300,7 @@ export default function Home() {
       </div>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-white mt-16">
+      <footer className="bg-gray-900 text-white mt-auto">
         <div className="container mx-auto px-4 py-8">
           <div className="text-center">
             <p className="text-gray-400 mb-2">
