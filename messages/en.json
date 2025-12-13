@@ -1,0 +1,256 @@
+{
+  "metadata": {
+    "title": "GPULaw Attorney Services - AI-Powered Legal Tools",
+    "description": "Advanced AI-powered tools for legal document analysis, research, and drafting"
+  },
+  "header": {
+    "title": "GPULaw Attorney Services",
+    "subtitle": "AI-Powered Legal Tools for Precision Work"
+  },
+  "hero": {
+    "title": "Professional Legal AI Tools",
+    "description": "Advanced AI-powered tools designed specifically for attorneys to analyze documents, conduct research, draft legal documents, and review work with unprecedented precision."
+  },
+  "specialized": {
+    "title": "Specialized Use Cases",
+    "crypto": {
+      "title": "Crypto Compliance Legal Assistant",
+      "badge": "Featured",
+      "description": "Comprehensive AI legal assistant specialized in cryptocurrency compliance, exchange regulations, ICO legal opinions, token classification, and AML/KYC requirements. Access dedicated tools for crypto-specific legal documentation and regulatory guidance.",
+      "tags": {
+        "exchange": "Exchange Compliance",
+        "ico": "ICO Legal Opinions",
+        "aml": "AML/KYC Requirements",
+        "token": "Token Classification",
+        "licensing": "Licensing & Regulations"
+      },
+      "cta": "Launch Crypto Compliance Assistant"
+    }
+  },
+  "coreTools": {
+    "title": "Core Legal Tools",
+    "analyzer": {
+      "title": "Document Analyzer",
+      "description": "Analyze emails, contracts, evidence, and legal documents. Extract key facts, identify parties, dates, and legal issues with precision.",
+      "tags": {
+        "fact": "Fact Extraction",
+        "issue": "Issue Identification",
+        "party": "Party Detection"
+      }
+    },
+    "researcher": {
+      "title": "Legal Researcher",
+      "description": "Research laws, regulations, and court decisions. Get comprehensive analysis of how legal principles apply to your cases.",
+      "tags": {
+        "case": "Case Law",
+        "statutes": "Statutes",
+        "regulations": "Regulations"
+      }
+    },
+    "drafter": {
+      "title": "Document Drafter",
+      "description": "Draft contracts, motions, briefs, complaints, and other legal documents with precision and proper legal formatting.",
+      "tags": {
+        "contracts": "Contracts",
+        "motions": "Motions",
+        "briefs": "Briefs"
+      }
+    },
+    "reviewer": {
+      "title": "Document Reviewer",
+      "description": "Review and edit legal documents for accuracy, completeness, and effectiveness. Get detailed feedback on improvements.",
+      "tags": {
+        "review": "Legal Review",
+        "grammar": "Grammar Check",
+        "suggestions": "Suggestions"
+      }
+    }
+  },
+  "features": {
+    "title": "Why Choose GPULaw Attorney Services?",
+    "precision": {
+      "title": "Precision-Focused",
+      "description": "Built specifically for legal work where every word matters. Low-temperature AI models ensure accuracy over creativity."
+    },
+    "secure": {
+      "title": "Secure & Confidential",
+      "description": "All processing is encrypted and secure. Your client information and legal work remain confidential."
+    },
+    "timeSaving": {
+      "title": "Time-Saving",
+      "description": "Automate routine tasks and get instant insights. Spend more time on strategy and client relationships."
+    }
+  },
+  "footer": {
+    "copyright": "© 2025 GPULaw Technologies, Inc. All rights reserved.",
+    "disclaimer": "Disclaimer:",
+    "disclaimerText": "These AI tools are designed to assist attorneys in their work. All outputs should be reviewed and verified by a licensed attorney before use."
+  },
+  "tools": {
+    "common": {
+      "backToTools": "Back to Tools",
+      "loading": "Loading...",
+      "error": "Error",
+      "copy": "Copy",
+      "copied": "Copied to clipboard"
+    },
+    "chat": {
+      "aiAssistant": "AI Assistant",
+      "openChat": "Open AI Chat",
+      "closeChat": "Close Chat",
+      "clearChat": "Clear Chat",
+      "subtitle": "24/7 Legal Assistant",
+      "welcomeTitle": "Welcome to AI Legal Assistant",
+      "welcomeMessage": "Ask me anything about your document or legal questions!",
+      "canAsk": "You can ask about:",
+      "examples": {
+        "explain": "Explain legal terms and clauses",
+        "analyze": "Analyze document content",
+        "draft": "Provide drafting suggestions",
+        "translate": "Translate legal documents"
+      },
+      "inputPlaceholder": "Type your message... (Press Enter to send)",
+      "inputTip": "💡 Tip: Press Enter to send, Shift+Enter for new line",
+      "sendButton": "Send",
+      "sending": "Sending...",
+      "thinking": "AI is thinking...",
+      "error": "Error"
+    },
+    "analyzer": {
+      "title": "Document Analyzer",
+      "documentType": "Document Type",
+      "analysisType": "Analysis Type",
+      "documentContent": "Document Content",
+      "placeholder": "Paste your document content here...",
+      "analyzeButton": "Analyze Document",
+      "analyzing": "Analyzing...",
+      "results": "Analysis Results",
+      "extractedData": "Extracted Data",
+      "wordCount": "Word Count",
+      "importantDates": "Important Dates",
+      "citationsFound": "Citations Found",
+      "pleaseEnter": "Please enter document content",
+      "types": {
+        "contract": "Contract",
+        "email": "Email",
+        "evidence": "Evidence",
+        "motion": "Motion",
+        "brief": "Brief",
+        "complaint": "Complaint",
+        "other": "Other"
+      },
+      "analysisTypes": {
+        "full": "Full Analysis",
+        "summary": "Summary Only",
+        "issues": "Issues Only",
+        "extract_facts": "Extract Facts"
+      }
+    },
+    "researcher": {
+      "title": "Legal Researcher",
+      "researchQuery": "Research Query",
+      "queryPlaceholder": "What legal question do you need to research? (e.g., 'statute of limitations for contract breach in California')",
+      "jurisdiction": "Jurisdiction",
+      "jurisdictionPlaceholder": "e.g., California, New York, Federal",
+      "practiceArea": "Practice Area (Optional)",
+      "conductButton": "Conduct Research",
+      "researching": "Researching...",
+      "results": "Research Results",
+      "query": "Query",
+      "relatedTopics": "Related Research Topics",
+      "pleaseEnter": "Please enter a research query",
+      "practiceAreas": {
+        "all": "All Practice Areas",
+        "family": "Family Law",
+        "consumer": "Consumer & Debt",
+        "housing": "Housing & Landlord-Tenant",
+        "wills": "Wills, Estates & Probate",
+        "immigration": "Immigration",
+        "traffic": "Traffic Cases",
+        "criminal": "Criminal Law",
+        "civil": "Civil Litigation",
+        "corporate": "Corporate Law"
+      }
+    },
+    "drafter": {
+      "title": "Document Drafter",
+      "documentType": "Document Type",
+      "jurisdiction": "Jurisdiction",
+      "jurisdictionPlaceholder": "e.g., California, New York, Federal",
+      "purpose": "Purpose of Document",
+      "purposePlaceholder": "Describe the purpose and what this document should accomplish...",
+      "parties": "Parties (one per line, format: Name: Role)",
+      "partiesPlaceholder": "John Doe: Plaintiff\nJane Smith: Defendant",
+      "facts": "Relevant Facts (one per line)",
+      "factsPlaceholder": "Contract signed on January 1, 2025\nBreach occurred on February 15, 2025\nDamages amount to $50,000",
+      "draftButton": "Draft Document",
+      "drafting": "Drafting...",
+      "draftedDocument": "Drafted Document",
+      "suggestionsTitle": "Suggestions for Review",
+      "warningsTitle": "Important Warnings",
+      "pleaseEnter": "Please describe the purpose of the document",
+      "required": "*",
+      "types": {
+        "contract": "Contract",
+        "letter": "Legal Letter",
+        "motion": "Motion",
+        "brief": "Brief",
+        "settlement": "Settlement Agreement",
+        "complaint": "Complaint",
+        "opinion": "Legal Opinion"
+      }
+    },
+    "reviewer": {
+      "title": "Document Reviewer",
+      "documentType": "Document Type",
+      "documentTypePlaceholder": "e.g., contract, motion, brief",
+      "reviewType": "Review Type",
+      "documentContent": "Document Content",
+      "placeholder": "Paste your document content here for review...",
+      "reviewButton": "Review Document",
+      "reviewing": "Reviewing...",
+      "results": "Review Results",
+      "overallAssessment": "Overall Assessment",
+      "strengthScore": "Strength Score",
+      "issuesIdentified": "Issues Identified",
+      "generalSuggestions": "General Suggestions",
+      "revisedDocument": "Revised Document",
+      "noIssues": "✓ No major issues found! The document appears to be well-drafted.",
+      "location": "Location",
+      "suggestion": "Suggestion",
+      "pleaseEnter": "Please enter document content to review",
+      "reviewTypes": {
+        "comprehensive": "Comprehensive Review",
+        "legal": "Legal Review Only",
+        "grammar": "Grammar & Style Only",
+        "fact_check": "Fact Check"
+      },
+      "issueTypes": {
+        "legal": "Legal",
+        "factual": "Factual",
+        "drafting": "Drafting",
+        "grammar": "Grammar",
+        "formatting": "Formatting"
+      },
+      "severity": {
+        "critical": "Critical",
+        "warning": "Warning",
+        "suggestion": "Suggestion"
+      },
+      "translation": {
+        "enableTranslation": "Enable Bilingual Translation",
+        "translating": "Translating...",
+        "originalText": "Original Text",
+        "translatedText": "Translated Text (English ↔ Chinese)",
+        "targetLanguage": "Target Language",
+        "chinese": "Chinese",
+        "english": "English",
+        "translateButton": "Translate Document",
+        "bilingualView": "Bilingual Comparison View",
+        "showOriginal": "Show Original Only",
+        "showTranslation": "Show Translation Only",
+        "showBoth": "Show Both (Side-by-Side)"
+      }
+    }
+  }
+}
