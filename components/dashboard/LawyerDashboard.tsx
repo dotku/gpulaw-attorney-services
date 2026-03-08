@@ -16,9 +16,25 @@ import {
 
 interface LawyerDashboardProps {
   verificationStatus?: string;
+  clientCount?: number;
+  pendingConsultations?: number;
+  totalEarnings?: number;
+  recentConsultations?: Array<{
+    id: string;
+    clientName: string;
+    category: string;
+    status: string;
+    scheduledAt: string | null;
+  }>;
 }
 
-export default function LawyerDashboard({ verificationStatus }: LawyerDashboardProps) {
+export default function LawyerDashboard({
+  verificationStatus,
+  clientCount = 0,
+  pendingConsultations = 0,
+  totalEarnings = 0,
+  recentConsultations = [],
+}: LawyerDashboardProps) {
   const t = useTranslations('dashboard');
   const params = useParams();
   const locale = params.locale as string;
@@ -60,16 +76,16 @@ export default function LawyerDashboard({ verificationStatus }: LawyerDashboardP
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8">
         <StatCard
           title={t('lawyer.myClients')}
-          value="0"
+          value={String(clientCount)}
           icon={<Users className="h-6 w-6" />}
-          subtitle={t('lawyer.noClientsYet')}
+          subtitle={clientCount === 0 ? t('lawyer.noClientsYet') : t('lawyer.activeClients')}
           color="blue"
         />
         <StatCard
           title={t('lawyer.pendingConsultations')}
-          value="0"
+          value={String(pendingConsultations)}
           icon={<Clock className="h-6 w-6" />}
-          subtitle={t('lawyer.noPending')}
+          subtitle={pendingConsultations === 0 ? t('lawyer.noPending') : t('lawyer.awaitingResponse')}
           color="orange"
         />
         <StatCard
@@ -87,7 +103,7 @@ export default function LawyerDashboard({ verificationStatus }: LawyerDashboardP
         />
         <StatCard
           title={t('lawyer.earnings')}
-          value="$0"
+          value={`$${totalEarnings.toLocaleString()}`}
           icon={<DollarSign className="h-6 w-6" />}
           subtitle={t('lawyer.earningsThisMonth')}
           color="purple"
@@ -119,15 +135,40 @@ export default function LawyerDashboard({ verificationStatus }: LawyerDashboardP
         />
       </div>
 
-      {/* Recent Activity */}
+      {/* Recent Consultations */}
       <div className="bg-white rounded-lg border border-slate-200 p-6">
         <h2 className="text-xl font-semibold text-slate-900 mb-4">
           {t('lawyer.recentConsultations')}
         </h2>
-        <div className="flex flex-col items-center justify-center py-8 text-slate-500">
-          <Clock className="h-10 w-10 mb-3 text-slate-300" />
-          <p className="text-sm">{t('lawyer.noRecentConsultations')}</p>
-        </div>
+        {recentConsultations.length > 0 ? (
+          <div className="space-y-3">
+            {recentConsultations.map((c) => (
+              <div
+                key={c.id}
+                className="flex items-start gap-3 pb-3 border-b border-slate-100 last:border-0 last:pb-0"
+              >
+                <div className="flex-1 min-w-0">
+                  <p className="font-medium text-slate-900 text-sm truncate">
+                    {c.clientName}
+                  </p>
+                  <p className="text-xs text-slate-500 truncate">
+                    {c.category} &middot; {c.status}
+                  </p>
+                </div>
+                {c.scheduledAt && (
+                  <p className="text-xs text-slate-500 whitespace-nowrap">
+                    {new Date(c.scheduledAt).toLocaleDateString()}
+                  </p>
+                )}
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="flex flex-col items-center justify-center py-8 text-slate-500">
+            <Clock className="h-10 w-10 mb-3 text-slate-300" />
+            <p className="text-sm">{t('lawyer.noRecentConsultations')}</p>
+          </div>
+        )}
       </div>
     </>
   );

@@ -1,41 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { requireApiAuth, checkRateLimit } from '@/lib/api-auth';
-
-// Demo data for verification status
-const demoVerification = {
-  id: 'lp-1',
-  userId: 'demo-user',
-  firstName: '',
-  lastName: '',
-  barNumber: '',
-  barState: '',
-  yearsExperience: 0,
-  status: 'PENDING_VERIFICATION',
-  verificationNotes: null,
-  approvedAt: null,
-  documents: [] as Array<{
-    id: string;
-    type: string;
-    fileName: string;
-    fileSize: number;
-    mimeType: string;
-    uploadedAt: string;
-    isVerified: boolean;
-  }>,
-  createdAt: new Date().toISOString(),
-  updatedAt: new Date().toISOString(),
-};
-
-// In-memory store for demo — keyed per user to avoid cross-user data leakage
-// TODO: Replace with Prisma queries when DB integration is complete
-const userVerifications = new Map<string, typeof demoVerification>();
-
-function getVerification(userId: string) {
-  if (!userVerifications.has(userId)) {
-    userVerifications.set(userId, { ...demoVerification, userId });
-  }
-  return userVerifications.get(userId)!;
-}
+import { requireApiAuth, checkRateLimit, safeErrorResponse } from '@/lib/api-auth';
+import { prisma } from '@/lib/prisma';
 
 export async function GET(request: NextRequest) {
   const auth = await requireApiAuth(request);
@@ -44,8 +9,76 @@ export async function GET(request: NextRequest) {
   const rateLimited = await checkRateLimit(auth.user.sub, 60, 60_000);
   if (rateLimited) return rateLimited;
 
-  const verification = getVerification(auth.user.sub);
-  return NextResponse.json({ verification });
+  try {
+    const { user } = auth as { user: { sub: string; email: string } };
+
+    const dbUser = await prisma.user.findUnique({
+      where: { email: user.email },
+      select: {
+        lawyerProfile: {
+          include: {
+            documents: {
+              select: {
+                id: true,
+                type: true,
+                fileName: true,
+                fileSize: true,
+                mimeType: true,
+                uploadedAt: true,
+                isVerified: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    if (!dbUser?.lawyerProfile) {
+      return NextResponse.json({
+        verification: {
+          id: null,
+          status: null,
+          firstName: '',
+          lastName: '',
+          barNumber: '',
+          barState: '',
+          yearsExperience: 0,
+          verificationNotes: null,
+          approvedAt: null,
+          documents: [],
+        },
+      });
+    }
+
+    const lp = dbUser.lawyerProfile;
+    return NextResponse.json({
+      verification: {
+        id: lp.id,
+        userId: lp.userId,
+        firstName: lp.firstName,
+        lastName: lp.lastName,
+        barNumber: lp.barNumber,
+        barState: lp.barState,
+        yearsExperience: lp.yearsExperience,
+        status: lp.status,
+        verificationNotes: lp.verificationNotes,
+        approvedAt: lp.approvedAt?.toISOString() || null,
+        documents: lp.documents.map((d) => ({
+          id: d.id,
+          type: d.type,
+          fileName: d.fileName,
+          fileSize: d.fileSize,
+          mimeType: d.mimeType,
+          uploadedAt: d.uploadedAt.toISOString(),
+          isVerified: d.isVerified,
+        })),
+        createdAt: lp.createdAt.toISOString(),
+        updatedAt: lp.updatedAt.toISOString(),
+      },
+    });
+  } catch (error) {
+    return safeErrorResponse(error, 'Failed to fetch verification');
+  }
 }
 
 export async function POST(request: NextRequest) {
@@ -56,6 +89,8 @@ export async function POST(request: NextRequest) {
   if (rateLimited) return rateLimited;
 
   try {
+    const { user } = auth as { user: { sub: string; email: string } };
+
     const body = await request.json();
     const { barNumber, barState, yearsExperience, firstName, lastName, documents } = body;
 
@@ -66,35 +101,102 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Update verification profile (per-user)
-    const verification = getVerification(auth.user.sub);
-    verification.firstName = firstName || verification.firstName;
-    verification.lastName = lastName || verification.lastName;
-    verification.barNumber = barNumber;
-    verification.barState = barState;
-    verification.yearsExperience = yearsExperience || 0;
-    verification.status = 'PENDING_VERIFICATION';
-    verification.updatedAt = new Date().toISOString();
+    // Find or create user
+    const dbUser = await prisma.user.upsert({
+      where: { email: user.email },
+      create: {
+        email: user.email,
+        role: 'LAWYER',
+      },
+      update: {
+        role: 'LAWYER',
+      },
+    });
 
-    // Add document metadata (no actual file upload — storage coming soon)
+    // Upsert lawyer profile
+    const lawyerProfile = await prisma.lawyerProfile.upsert({
+      where: { userId: dbUser.id },
+      create: {
+        userId: dbUser.id,
+        firstName: firstName || '',
+        lastName: lastName || '',
+        barNumber,
+        barState,
+        barAdmissionDate: new Date(),
+        yearsExperience: yearsExperience || 0,
+        status: 'PENDING_VERIFICATION',
+      },
+      update: {
+        ...(firstName !== undefined && { firstName }),
+        ...(lastName !== undefined && { lastName }),
+        barNumber,
+        barState,
+        yearsExperience: yearsExperience || 0,
+        status: 'PENDING_VERIFICATION',
+      },
+    });
+
+    // Add document metadata if provided
     if (documents && Array.isArray(documents)) {
-      const newDocs = documents.map((doc: { type: string; fileName: string; fileSize: number; mimeType: string }) => ({
-        id: `doc-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
-        type: doc.type,
-        fileName: doc.fileName,
-        fileSize: doc.fileSize,
-        mimeType: doc.mimeType,
-        uploadedAt: new Date().toISOString(),
-        isVerified: false,
-      }));
-      verification.documents = [...verification.documents, ...newDocs];
+      for (const doc of documents) {
+        await prisma.lawyerDocument.create({
+          data: {
+            lawyerId: lawyerProfile.id,
+            type: doc.type || 'OTHER',
+            fileName: doc.fileName || 'unknown',
+            fileUrl: doc.fileUrl || '',
+            fileSize: doc.fileSize || null,
+            mimeType: doc.mimeType || null,
+          },
+        });
+      }
     }
 
-    return NextResponse.json({ verification }, { status: 201 });
-  } catch {
+    // Re-fetch with documents
+    const updated = await prisma.lawyerProfile.findUnique({
+      where: { id: lawyerProfile.id },
+      include: {
+        documents: {
+          select: {
+            id: true,
+            type: true,
+            fileName: true,
+            fileSize: true,
+            mimeType: true,
+            uploadedAt: true,
+            isVerified: true,
+          },
+        },
+      },
+    });
+
     return NextResponse.json(
-      { error: 'Failed to submit verification' },
-      { status: 500 }
+      {
+        verification: {
+          id: updated!.id,
+          userId: updated!.userId,
+          firstName: updated!.firstName,
+          lastName: updated!.lastName,
+          barNumber: updated!.barNumber,
+          barState: updated!.barState,
+          yearsExperience: updated!.yearsExperience,
+          status: updated!.status,
+          documents: updated!.documents.map((d) => ({
+            id: d.id,
+            type: d.type,
+            fileName: d.fileName,
+            fileSize: d.fileSize,
+            mimeType: d.mimeType,
+            uploadedAt: d.uploadedAt.toISOString(),
+            isVerified: d.isVerified,
+          })),
+          createdAt: updated!.createdAt.toISOString(),
+          updatedAt: updated!.updatedAt.toISOString(),
+        },
+      },
+      { status: 201 }
     );
+  } catch (error) {
+    return safeErrorResponse(error, 'Failed to submit verification');
   }
 }

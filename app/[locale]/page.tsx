@@ -9,6 +9,7 @@ import DocumentDrafter from '@/components/DocumentDrafter';
 import DocumentReviewer from '@/components/DocumentReviewer';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 import ToolsSidebar from '@/components/ToolsSidebar';
+import HomeClientDashboard from '@/components/HomeClientDashboard';
 
 type ActiveTool = 'analyze' | 'research' | 'draft' | 'review' | null;
 type SidebarTool = 'analyzer' | 'researcher' | 'drafter' | 'reviewer';
@@ -127,6 +128,9 @@ export default function Home() {
                 {t('hero.description')}
               </p>
             </div>
+
+            {/* Client Dashboard - shown for logged-in users */}
+            {isAuthenticated && <HomeClientDashboard />}
 
             {/* Specialized Use Cases Section */}
             <div className="mb-8 sm:mb-12 max-w-5xl mx-auto">

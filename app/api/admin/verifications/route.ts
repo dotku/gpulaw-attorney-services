@@ -1,70 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { requireApiAuth, checkRateLimit } from '@/lib/api-auth';
+import { requireApiAuth, checkRateLimit, safeErrorResponse } from '@/lib/api-auth';
 import { prisma } from '@/lib/prisma';
 
 async function requireAdmin(email: string) {
   const user = await prisma.user.findUnique({ where: { email }, select: { role: true } });
   return user?.role === 'PLATFORM_ADMIN' || user?.role === 'FIRM_ADMIN';
 }
-
-// Demo data for admin verification list
-const demoPendingLawyers = [
-  {
-    id: 'lp-101',
-    userId: 'user-101',
-    firstName: 'Sarah',
-    lastName: 'Chen',
-    email: 'sarah.chen@example.com',
-    barNumber: 'CA-123456',
-    barState: 'CA',
-    yearsExperience: 8,
-    status: 'PENDING_VERIFICATION',
-    documents: [
-      {
-        id: 'doc-1',
-        type: 'BAR_CERTIFICATE',
-        fileName: 'bar_license_ca.pdf',
-        fileSize: 245000,
-        mimeType: 'application/pdf',
-        uploadedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
-        isVerified: false,
-      },
-      {
-        id: 'doc-2',
-        type: 'MALPRACTICE_INSURANCE',
-        fileName: 'insurance_cert.pdf',
-        fileSize: 180000,
-        mimeType: 'application/pdf',
-        uploadedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
-        isVerified: false,
-      },
-    ],
-    createdAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
-  },
-  {
-    id: 'lp-102',
-    userId: 'user-102',
-    firstName: 'Michael',
-    lastName: 'Rodriguez',
-    email: 'michael.r@example.com',
-    barNumber: 'NY-789012',
-    barState: 'NY',
-    yearsExperience: 12,
-    status: 'PENDING_VERIFICATION',
-    documents: [
-      {
-        id: 'doc-3',
-        type: 'BAR_CERTIFICATE',
-        fileName: 'ny_bar_certificate.pdf',
-        fileSize: 310000,
-        mimeType: 'application/pdf',
-        uploadedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
-        isVerified: false,
-      },
-    ],
-    createdAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
-  },
-];
 
 export async function GET(request: NextRequest) {
   const auth = await requireApiAuth(request);
@@ -78,7 +19,52 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'Forbidden: admin access required' }, { status: 403 });
   }
 
-  return NextResponse.json({ lawyers: demoPendingLawyers });
+  try {
+    const pendingLawyers = await prisma.lawyerProfile.findMany({
+      where: { status: 'PENDING_VERIFICATION' },
+      orderBy: { createdAt: 'desc' },
+      include: {
+        user: { select: { email: true } },
+        documents: {
+          select: {
+            id: true,
+            type: true,
+            fileName: true,
+            fileSize: true,
+            mimeType: true,
+            uploadedAt: true,
+            isVerified: true,
+          },
+        },
+      },
+    });
+
+    const lawyers = pendingLawyers.map((lp) => ({
+      id: lp.id,
+      userId: lp.userId,
+      firstName: lp.firstName,
+      lastName: lp.lastName,
+      email: lp.user.email,
+      barNumber: lp.barNumber,
+      barState: lp.barState,
+      yearsExperience: lp.yearsExperience,
+      status: lp.status,
+      documents: lp.documents.map((d) => ({
+        id: d.id,
+        type: d.type,
+        fileName: d.fileName,
+        fileSize: d.fileSize,
+        mimeType: d.mimeType,
+        uploadedAt: d.uploadedAt.toISOString(),
+        isVerified: d.isVerified,
+      })),
+      createdAt: lp.createdAt.toISOString(),
+    }));
+
+    return NextResponse.json({ lawyers });
+  } catch (error) {
+    return safeErrorResponse(error, 'Failed to fetch verifications');
+  }
 }
 
 export async function PUT(request: NextRequest) {
@@ -111,20 +97,35 @@ export async function PUT(request: NextRequest) {
       );
     }
 
-    // TODO: Update database when Prisma is connected
-    const result = {
-      lawyerId,
-      status: action,
-      notes: notes || null,
-      reviewedAt: new Date().toISOString(),
-      reviewedBy: auth.user?.email || 'admin',
-    };
+    const updated = await prisma.lawyerProfile.update({
+      where: { id: lawyerId },
+      data: {
+        status: action,
+        verificationNotes: notes || null,
+        ...(action === 'APPROVED' && {
+          approvedAt: new Date(),
+          approvedBy: auth.user?.email || 'admin',
+        }),
+      },
+      select: {
+        id: true,
+        status: true,
+        verificationNotes: true,
+        approvedAt: true,
+        approvedBy: true,
+      },
+    });
 
-    return NextResponse.json({ result });
-  } catch {
-    return NextResponse.json(
-      { error: 'Failed to update verification status' },
-      { status: 500 }
-    );
+    return NextResponse.json({
+      result: {
+        lawyerId: updated.id,
+        status: updated.status,
+        notes: updated.verificationNotes,
+        reviewedAt: updated.approvedAt?.toISOString() || new Date().toISOString(),
+        reviewedBy: updated.approvedBy || auth.user?.email || 'admin',
+      },
+    });
+  } catch (error) {
+    return safeErrorResponse(error, 'Failed to update verification status');
   }
 }

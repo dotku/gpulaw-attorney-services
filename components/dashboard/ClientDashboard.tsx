@@ -12,7 +12,26 @@ import {
   Calendar,
 } from 'lucide-react';
 
-export default function ClientDashboard() {
+interface ClientDashboardProps {
+  consultationCount?: number;
+  documentCount?: number;
+  chatCount?: number;
+  upcomingCount?: number;
+  recentChats?: Array<{
+    id: string;
+    category: string | null;
+    summary: string | null;
+    updatedAt: string;
+  }>;
+}
+
+export default function ClientDashboard({
+  consultationCount = 0,
+  documentCount = 0,
+  chatCount = 0,
+  upcomingCount = 0,
+  recentChats = [],
+}: ClientDashboardProps) {
   const t = useTranslations('dashboard');
   const params = useParams();
   const locale = params.locale as string;
@@ -23,30 +42,30 @@ export default function ClientDashboard() {
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8">
         <StatCard
           title={t('client.myConsultations')}
-          value="0"
+          value={String(consultationCount)}
           icon={<MessageSquare className="h-6 w-6" />}
-          subtitle={t('client.noConsultationsYet')}
+          subtitle={consultationCount === 0 ? t('client.noConsultationsYet') : t('client.totalConsultations')}
           color="blue"
         />
         <StatCard
           title={t('client.myDocuments')}
-          value="0"
+          value={String(documentCount)}
           icon={<FileText className="h-6 w-6" />}
-          subtitle={t('client.noDocumentsYet')}
+          subtitle={documentCount === 0 ? t('client.noDocumentsYet') : t('client.totalDocuments')}
           color="green"
         />
         <StatCard
           title={t('client.aiChats')}
-          value="0"
+          value={String(chatCount)}
           icon={<Sparkles className="h-6 w-6" />}
-          subtitle={t('client.startChatting')}
+          subtitle={chatCount === 0 ? t('client.startChatting') : t('client.chatSessions')}
           color="purple"
         />
         <StatCard
           title={t('client.upcoming')}
-          value="0"
+          value={String(upcomingCount)}
           icon={<Calendar className="h-6 w-6" />}
-          subtitle={t('client.noUpcoming')}
+          subtitle={upcomingCount === 0 ? t('client.noUpcoming') : t('client.scheduledSessions')}
           color="orange"
         />
       </div>
@@ -81,16 +100,39 @@ export default function ClientDashboard() {
         <h2 className="text-xl font-semibold text-slate-900 mb-4">
           {t('client.recentAiChats')}
         </h2>
-        <div className="flex flex-col items-center justify-center py-8 text-slate-500">
-          <Clock className="h-10 w-10 mb-3 text-slate-300" />
-          <p className="text-sm">{t('client.noRecentChats')}</p>
-          <Link
-            href={`/${locale}`}
-            className="mt-3 text-sm text-blue-600 hover:text-blue-700 font-medium"
-          >
-            {t('client.startFirstChat')}
-          </Link>
-        </div>
+        {recentChats.length > 0 ? (
+          <div className="space-y-3">
+            {recentChats.map((chat) => (
+              <div
+                key={chat.id}
+                className="flex items-start gap-3 pb-3 border-b border-slate-100 last:border-0 last:pb-0"
+              >
+                <div className="flex-1 min-w-0">
+                  <p className="font-medium text-slate-900 text-sm truncate">
+                    {chat.category || 'General'}
+                  </p>
+                  <p className="text-xs text-slate-500 truncate">
+                    {chat.summary || 'No summary'}
+                  </p>
+                </div>
+                <p className="text-xs text-slate-500 whitespace-nowrap">
+                  {new Date(chat.updatedAt).toLocaleDateString()}
+                </p>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="flex flex-col items-center justify-center py-8 text-slate-500">
+            <Clock className="h-10 w-10 mb-3 text-slate-300" />
+            <p className="text-sm">{t('client.noRecentChats')}</p>
+            <Link
+              href={`/${locale}`}
+              className="mt-3 text-sm text-blue-600 hover:text-blue-700 font-medium"
+            >
+              {t('client.startFirstChat')}
+            </Link>
+          </div>
+        )}
       </div>
     </>
   );

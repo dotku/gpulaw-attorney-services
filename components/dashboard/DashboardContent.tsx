@@ -23,6 +23,30 @@ interface DashboardContentProps {
       timestamp: string;
     }>;
   };
+  lawyerData?: {
+    clientCount: number;
+    pendingConsultations: number;
+    totalEarnings: number;
+    recentConsultations: Array<{
+      id: string;
+      clientName: string;
+      category: string;
+      status: string;
+      scheduledAt: string | null;
+    }>;
+  };
+  clientData?: {
+    consultationCount: number;
+    documentCount: number;
+    chatCount: number;
+    upcomingCount: number;
+    recentChats: Array<{
+      id: string;
+      category: string | null;
+      summary: string | null;
+      updatedAt: string;
+    }>;
+  };
 }
 
 export default function DashboardContent({
@@ -30,6 +54,8 @@ export default function DashboardContent({
   userName,
   verificationStatus,
   adminData,
+  lawyerData,
+  clientData,
 }: DashboardContentProps) {
   const t = useTranslations('dashboard');
 
@@ -62,9 +88,23 @@ export default function DashboardContent({
 
         {/* Role-specific content */}
         {role === null && <ProfilePrompt />}
-        {role === 'CLIENT' && <ClientDashboard />}
+        {role === 'CLIENT' && (
+          <ClientDashboard
+            consultationCount={clientData?.consultationCount}
+            documentCount={clientData?.documentCount}
+            chatCount={clientData?.chatCount}
+            upcomingCount={clientData?.upcomingCount}
+            recentChats={clientData?.recentChats}
+          />
+        )}
         {role === 'LAWYER' && (
-          <LawyerDashboard verificationStatus={verificationStatus} />
+          <LawyerDashboard
+            verificationStatus={verificationStatus}
+            clientCount={lawyerData?.clientCount}
+            pendingConsultations={lawyerData?.pendingConsultations}
+            totalEarnings={lawyerData?.totalEarnings}
+            recentConsultations={lawyerData?.recentConsultations}
+          />
         )}
         {(role === 'FIRM_ADMIN' || role === 'PLATFORM_ADMIN') && adminData && (
           <AdminDashboard

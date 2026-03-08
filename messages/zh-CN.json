@@ -88,6 +88,19 @@
       "description": "自动化日常任务并获得即时洞察。将更多时间用于策略和客户关系。"
     }
   },
+  "home": {
+    "clientDashboard": {
+      "title": "我的控制台",
+      "viewAll": "查看完整控制台",
+      "consultations": "咨询",
+      "documents": "文档",
+      "aiChats": "AI对话",
+      "upcoming": "即将到来",
+      "findLawyer": "找律师",
+      "myDocuments": "我的文档",
+      "editProfile": "编辑资料"
+    }
+  },
   "footer": {
     "copyright": "© 2025 GPULaw科技有限公司。保留所有权利。",
     "disclaimer": "免责声明：",
@@ -387,7 +400,11 @@
       "viewDocumentsDesc": "访问和管理您的法律文档",
       "recentAiChats": "最近的AI对话",
       "noRecentChats": "暂无最近的AI对话",
-      "startFirstChat": "开始您的第一次AI对话"
+      "startFirstChat": "开始您的第一次AI对话",
+      "totalConsultations": "咨询总数",
+      "totalDocuments": "文档总数",
+      "chatSessions": "对话数量",
+      "scheduledSessions": "已预约"
     },
     "lawyer": {
       "subtitle": "管理您的客户和咨询",
@@ -413,7 +430,9 @@
       "viewClients": "查看客户",
       "viewClientsDesc": "查看您的客户列表及其案件详情",
       "recentConsultations": "最近的咨询",
-      "noRecentConsultations": "暂无最近的咨询"
+      "noRecentConsultations": "暂无最近的咨询",
+      "activeClients": "活跃客户",
+      "awaitingResponse": "等待回复"
     },
     "admin": {
       "subtitle": "平台管理和系统概览",

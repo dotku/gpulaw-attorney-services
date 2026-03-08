@@ -88,6 +88,19 @@
       "description": "Automate routine tasks and get instant insights. Spend more time on strategy and client relationships."
     }
   },
+  "home": {
+    "clientDashboard": {
+      "title": "My Dashboard",
+      "viewAll": "View Full Dashboard",
+      "consultations": "Consultations",
+      "documents": "Documents",
+      "aiChats": "AI Chats",
+      "upcoming": "Upcoming",
+      "findLawyer": "Find a Lawyer",
+      "myDocuments": "My Documents",
+      "editProfile": "Edit Profile"
+    }
+  },
   "footer": {
     "copyright": "© 2025 GPULaw Technologies, Inc. All rights reserved.",
     "disclaimer": "Disclaimer:",
@@ -387,7 +400,11 @@
       "viewDocumentsDesc": "Access and manage your legal documents",
       "recentAiChats": "Recent AI Chats",
       "noRecentChats": "No recent AI chats",
-      "startFirstChat": "Start your first AI chat"
+      "startFirstChat": "Start your first AI chat",
+      "totalConsultations": "Total consultations",
+      "totalDocuments": "Total documents",
+      "chatSessions": "Chat sessions",
+      "scheduledSessions": "Scheduled sessions"
     },
     "lawyer": {
       "subtitle": "Manage your clients and consultations",
@@ -413,7 +430,9 @@
       "viewClients": "View Clients",
       "viewClientsDesc": "See your client list and their case details",
       "recentConsultations": "Recent Consultations",
-      "noRecentConsultations": "No recent consultations"
+      "noRecentConsultations": "No recent consultations",
+      "activeClients": "Active clients",
+      "awaitingResponse": "Awaiting response"
     },
     "admin": {
       "subtitle": "Platform administration and system overview",
