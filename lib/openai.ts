@@ -1,8 +1,18 @@
 import OpenAI from 'openai';
 
-// Initialize OpenAI client - API key will be checked at runtime
+// Use Vercel AI Gateway when available, otherwise direct OpenAI
+const gatewayKey = process.env.VERCEL_AI_GATEWAY_KEY;
+
 export const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY || 'dummy-key-for-build',
+  ...(gatewayKey
+    ? {
+        baseURL: 'https://gateway.ai.vercel.com/v1/openai',
+        defaultHeaders: { 'x-vercel-ai-gateway-key': gatewayKey },
+        apiKey: process.env.OPENAI_API_KEY || 'dummy-key-for-build',
+      }
+    : {
+        apiKey: process.env.OPENAI_API_KEY || 'dummy-key-for-build',
+      }),
 });
 
 function checkApiKey() {

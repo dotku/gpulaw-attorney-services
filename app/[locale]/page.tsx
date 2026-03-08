@@ -81,6 +81,12 @@ export default function Home() {
                       {user?.name || user?.email}
                     </span>
                     <a
+                      href={`/${locale}/dashboard`}
+                      className="inline-flex items-center rounded-md bg-white px-3 py-1.5 text-sm font-semibold text-blue-900 hover:bg-blue-50 transition-colors"
+                    >
+                      {t('auth.dashboard')}
+                    </a>
+                    <a
                       href={logoutHref}
                       className="inline-flex items-center rounded-md bg-white/10 px-3 py-1.5 text-sm font-semibold text-white hover:bg-white/20 transition-colors"
                     >
