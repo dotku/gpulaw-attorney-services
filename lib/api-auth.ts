@@ -1,12 +1,31 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth0, isAuth0Configured } from './auth0';
 import { prisma } from './prisma';
+import { hashApiKey } from './api-keys';
+
+type AuthError = { error: NextResponse; user?: undefined };
+type AuthSuccess = {
+  error?: undefined;
+  user: { sub: string; email?: string; name?: string | null; [key: string]: unknown };
+  apiKeyId?: string;
+  permissions?: string[];
+  ip?: string;
+  userAgent?: string;
+};
+export type AuthResult = AuthError | AuthSuccess;
 
 /**
- * Verify the user is authenticated via Auth0 session.
- * Returns the user session or a 401 response.
+ * Verify the user is authenticated via Auth0 session or API key.
+ * Supports: Bearer token (API key) or session cookie.
  */
-export async function requireApiAuth(request: NextRequest) {
+export async function requireApiAuth(request: NextRequest): Promise<AuthResult> {
+  // Check for Bearer token (API key auth)
+  const authHeader = request.headers.get('authorization');
+  if (authHeader?.startsWith('Bearer sk_live_')) {
+    return authenticateWithApiKey(authHeader.slice(7), request);
+  }
+
+  // Fall back to Auth0 session
   if (!isAuth0Configured || !auth0) {
     return { error: NextResponse.json({ error: 'Service unavailable' }, { status: 503 }) };
   }
@@ -23,6 +42,50 @@ export async function requireApiAuth(request: NextRequest) {
     };
   } catch {
     return { error: NextResponse.json({ error: 'Unauthorized' }, { status: 401 }) };
+  }
+}
+
+/**
+ * Authenticate request using an API key (Bearer token).
+ */
+async function authenticateWithApiKey(rawKey: string, request: NextRequest): Promise<AuthResult> {
+  try {
+    const keyHash = hashApiKey(rawKey);
+
+    const apiKey = await prisma.apiKey.findUnique({
+      where: { keyHash },
+      include: {
+        user: { select: { id: true, email: true, name: true, role: true } },
+      },
+    });
+
+    if (!apiKey || apiKey.revokedAt) {
+      return { error: NextResponse.json({ error: 'Invalid API key' }, { status: 401 }) };
+    }
+
+    if (apiKey.expiresAt && apiKey.expiresAt < new Date()) {
+      return { error: NextResponse.json({ error: 'API key expired' }, { status: 401 }) };
+    }
+
+    // Update last used (fire-and-forget)
+    prisma.apiKey.update({
+      where: { id: apiKey.id },
+      data: { lastUsedAt: new Date() },
+    }).catch(() => {});
+
+    return {
+      user: {
+        sub: apiKey.user.id,
+        email: apiKey.user.email,
+        name: apiKey.user.name,
+      },
+      apiKeyId: apiKey.id,
+      permissions: apiKey.permissions,
+      ip: request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || request.headers.get('x-real-ip') || undefined,
+      userAgent: request.headers.get('user-agent') || undefined,
+    };
+  } catch {
+    return { error: NextResponse.json({ error: 'Authentication failed' }, { status: 401 }) };
   }
 }
 

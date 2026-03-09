@@ -18,6 +18,7 @@ import {
   ShieldCheck,
   ClipboardCheck,
   UserCircle,
+  Settings,
 } from 'lucide-react';
 import { useState } from 'react';
 
@@ -68,6 +69,11 @@ export default function DashboardLayout({
       name: t('dashboard.nav.verification'),
       href: `/${locale}/dashboard/verification`,
       icon: ShieldCheck,
+    },
+    {
+      name: t('dashboard.nav.settings'),
+      href: `/${locale}/dashboard/settings`,
+      icon: Settings,
     },
     {
       name: t('dashboard.nav.adminVerifications'),

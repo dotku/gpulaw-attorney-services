@@ -285,7 +285,33 @@
       "billing": "计费",
       "profile": "个人资料",
       "verification": "资质认证",
-      "adminVerifications": "认证审核"
+      "adminVerifications": "认证审核",
+      "settings": "设置"
+    },
+    "settings": {
+      "title": "设置",
+      "subtitle": "管理您的API密钥和账户设置",
+      "apiKeys": "API 密钥",
+      "createKey": "创建API密钥",
+      "keyName": "密钥名称",
+      "keyNamePlaceholder": "例如：生产环境API密钥",
+      "permissions": "权限",
+      "expiration": "过期时间",
+      "noExpiration": "永不过期",
+      "days": "天",
+      "creating": "创建中...",
+      "cancel": "取消",
+      "nameRequired": "请输入密钥名称",
+      "keyCopyWarning": "请立即复制您的API密钥，之后将无法再次查看。",
+      "noKeys": "暂无API密钥",
+      "noKeysDesc": "创建API密钥以编程方式访问GPULaw API",
+      "expires": "过期",
+      "lastUsed": "最后使用",
+      "revoke": "撤销",
+      "confirmRevoke": "确定要撤销此API密钥吗？此操作无法撤销。",
+      "loading": "加载中...",
+      "usage": "使用方式",
+      "usageDesc": "在请求头中使用您的API密钥进行身份验证："
     },
     "overview": {
       "subtitle": "管理您的法律案件、文档和团队"

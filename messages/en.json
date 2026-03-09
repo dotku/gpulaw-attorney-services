@@ -285,7 +285,33 @@
       "billing": "Billing",
       "profile": "Profile",
       "verification": "Verification",
-      "adminVerifications": "Verifications"
+      "adminVerifications": "Verifications",
+      "settings": "Settings"
+    },
+    "settings": {
+      "title": "Settings",
+      "subtitle": "Manage your API keys and account settings",
+      "apiKeys": "API Keys",
+      "createKey": "Create API Key",
+      "keyName": "Key Name",
+      "keyNamePlaceholder": "e.g. Production API Key",
+      "permissions": "Permissions",
+      "expiration": "Expiration",
+      "noExpiration": "No expiration",
+      "days": "days",
+      "creating": "Creating...",
+      "cancel": "Cancel",
+      "nameRequired": "Key name is required",
+      "keyCopyWarning": "Copy your API key now. You won't be able to see it again.",
+      "noKeys": "No API keys yet",
+      "noKeysDesc": "Create an API key to access GPULaw APIs programmatically",
+      "expires": "Expires",
+      "lastUsed": "Last used",
+      "revoke": "Revoke",
+      "confirmRevoke": "Are you sure you want to revoke this API key? This cannot be undone.",
+      "loading": "Loading...",
+      "usage": "Usage",
+      "usageDesc": "Use your API key in the Authorization header to authenticate API requests:"
     },
     "overview": {
       "subtitle": "Manage your legal cases, documents, and team"
